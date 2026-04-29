@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="color-scheme" content="light">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JP — Gallery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  :root {
+    color-scheme: light;
+    --black:  #ffffff;
+    --cyan:   oklch(0.52 0.24 25);
+    --violet: oklch(0.38 0.2 25);
+    --dim:    #666666;
+    --sep:    #e0e0e0;
+    --text:   #111111;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background-color: #ffffff !important; color: var(--text); overflow: hidden; }
+  #root { height: 100vh; display: flex; flex-direction: column; }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes scaleIn { from{opacity:0;transform:scale(0.96)} to{opacity:1;transform:scale(1)} }
+
+  /* ── THEME SWITCHER ── */
+  .theme-switcher {
+    position: fixed; top: 16px; right: 20px; z-index: 200;
+    display: flex; gap: 4px;
+  }
+  .theme-btn {
+    width: 28px; height: 28px; border: 1px solid #ccc;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 1px;
+    transition: all 0.2s; background: transparent;
+  }
+  .theme-btn.active { border-color: oklch(0.52 0.24 25); box-shadow: 0 0 8px oklch(0.52 0.24 25 / 0.3); }
+  .theme-btn.light-btn { background: #fff; color: #333; }
+  .theme-btn.dark-btn  { background: #111; color: #fff; border-color: #333; }
+  .theme-btn.dark-btn.active { border-color: oklch(0.52 0.24 25); }
+
+  body.dark-theme { background-color: #050508 !important; color: oklch(0.92 0.01 240) !important; }
+  body.dark-theme #root > div { background-color: #050508 !important; }
+  body.dark-theme nav { background: oklch(0.05 0.02 240 / 0.95) !important; border-bottom-color: oklch(0.16 0.04 240) !important; }
+  body.dark-theme .theme-btn.light-btn { border-color: #333; }
+
+</style>
+</head>
+<body>
+
+<div class="theme-switcher">
+  <button class="theme-btn light-btn" id="btn-light" title="Light mode">☀</button>
+  <button class="theme-btn dark-btn" id="btn-dark" title="Dark mode">☾</button>
+</div>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useCallback } = React;
+
+const ARTWORKS = [
+  { id: 2, title: 'Revolver', category: 'Weapons', renders: [
+    'uploads/Revolver_Main Camera.jpg',
+    'uploads/revolver_Main Camera4.jpg',
+    'uploads/revolver_Main Camera5_003.jpg',
+    'uploads/revolver_Main Camera5_004.jpg',
+    'uploads/revolver_Main Camera5_005.jpg',
+    'uploads/revolver_Main Camera5_007.jpg',
+    'uploads/revolver_Main Camera5_008.jpg',
+  ]},
+  {
+    id: 7, title: 'Drillgun', category: 'Weapons',
+    renders: [
+      'uploads/Drillgun_FullQuality.png',
+      'uploads/Drillgun_Shot 2_FullQuality.png',
+      'uploads/Drillgun_Shot 4_FullQuality_003.png',
+      'uploads/Drillgun_Shot 5_FullQuality.png',
+    ],
+  },
+  {
+    id: 8, title: 'Inspector Pistol', category: 'Weapons',
+    renders: [
+      'uploads/Inspector_pistol_shot 2_FullQuality.png',
+      'uploads/Inspector_pistol_Camera 1_FullQuality.png',
+      'uploads/Inspector_pistol.png',
+      'uploads/Inspector_pistol_Camera 1_FullQuality_002.png',
+      'uploads/tbrender_Camera 4.png',
+      'uploads/image(1).png',
+    ],
+  },
+  {
+    id: 4, title: 'MXT 2500 Radio', category: 'Props',
+    renders: [
+      'uploads/Radio_Shot 2_004.png',
+      'uploads/Radio_Main Camera_002.png',
+      'uploads/Radio_shot 3_001.png',
+      'uploads/Radio_Shot 4_001.png',
+    ],
+  },
+  {
+    id: 5, title: 'Field Radio MK-II', category: 'Props',
+    renders: [
+      'uploads/Radio2_Shot 3_001.png',
+      'uploads/Radio2_Shot 4.png',
+      'uploads/Radio2_Shot 6_001.png',
+      'uploads/Radio2_shot7.png',
+    ],
+  },
+  {
+    id: 6, title: 'Vintage Bicycle', category: 'Props',
+    renders: [
+      'uploads/02_Main Camera 7_001.png',
+      'uploads/02_Main Camera 9.png',
+      'uploads/02_Main Camera_003.png',
+      'uploads/02_Main Camera 2_002.png',
+      'uploads/02_Main Camera 4_001.png',
+      'uploads/02_Main Camera 5.png',
+    ],
+  },
+];
+
+/* ── VIEWER ── */
+function Viewer({ artwork, onClose }) {
+  const [rIdx, setRIdx] = useState(0);
+  const renders = artwork.renders;
+
+  const prev = useCallback(() => setRIdx(i => (i - 1 + renders.length) % renders.length), [renders.length]);
+  const next = useCallback(() => setRIdx(i => (i + 1) % renders.length), [renders.length]);
+
+  useEffect(() => {
+    const h = e => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') next();
+    };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
+  }, [prev, next, onClose]);
+
+  return (
+    <div style={{
+      position:'fixed', inset:0, zIndex:200,
+      background:'oklch(0.97 0.008 60 / 0.98)',
+      display:'flex', flexDirection:'column',
+      animation:'fadeIn 0.25s ease both',
+    }}>
+      <div style={{
+        height:56, flexShrink:0,
+        display:'flex', alignItems:'center', justifyContent:'space-between',
+        padding:'0 32px', borderBottom:'1px solid var(--sep)',
+        background:'oklch(0.97 0.008 60 / 0.95)',
+      }}>
+        <button onClick={onClose} style={{
+          display:'flex', alignItems:'center', gap:10,
+          background:'none', border:'none', cursor:'pointer',
+          fontFamily:'Space Mono,monospace', fontSize:10,
+          letterSpacing:3, textTransform:'uppercase', color:'var(--dim)',
+          transition:'color 0.2s', padding:0,
+        }}
+          onMouseEnter={e=>e.currentTarget.style.color='var(--cyan)'}
+          onMouseLeave={e=>e.currentTarget.style.color='var(--dim)'}
+        ><span style={{fontSize:18}}>←</span> Back</button>
+        <div style={{ fontFamily:'Orbitron,sans-serif', fontWeight:700, fontSize:13, letterSpacing:5 }}>{artwork.title}</div>
+        <div style={{ fontFamily:'Space Mono,monospace', fontSize:11, letterSpacing:2, color:'var(--dim)' }}>
+          {renders.length > 1
+            ? <><span style={{color:'var(--cyan)'}}>{String(rIdx+1).padStart(2,'0')}</span> / {String(renders.length).padStart(2,'0')}</>
+            : <span style={{color:'#cccccc'}}>1 RENDER</span>}
+        </div>
+      </div>
+
+      <div style={{ flex:1, position:'relative', display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden' }}>
+        <img key={rIdx} src={renders[rIdx]} alt={artwork.title}
+          style={{ maxWidth:'100%', maxHeight:'100%', objectFit:'contain', animation:'scaleIn 0.3s ease both' }} />
+
+        {renders.length > 1 && (<>
+          <button onClick={prev} style={{
+            position:'absolute', left:24, top:'50%', transform:'translateY(-50%)',
+            width:60, height:60, background:'#f4f4f4',
+            border:'1px solid var(--cyan)', color:'var(--cyan)',
+            fontSize:24, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center',
+            fontFamily:'Space Mono,monospace', transition:'all 0.2s',
+            boxShadow:'0 0 24px oklch(0.52 0.24 25 / 0.08)',
+          }}
+            onMouseEnter={e=>{e.currentTarget.style.background='oklch(0.52 0.24 25 / 0.08)'; e.currentTarget.style.boxShadow='0 0 32px oklch(0.52 0.24 25 / 0.2)';}}
+            onMouseLeave={e=>{e.currentTarget.style.background='#f4f4f4'; e.currentTarget.style.boxShadow='0 0 24px oklch(0.52 0.24 25 / 0.08)';}}
+          >←</button>
+          <button onClick={next} style={{
+            position:'absolute', right:24, top:'50%', transform:'translateY(-50%)',
+            width:60, height:60, background:'#f4f4f4',
+            border:'1px solid var(--cyan)', color:'var(--cyan)',
+            fontSize:24, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center',
+            fontFamily:'Space Mono,monospace', transition:'all 0.2s',
+            boxShadow:'0 0 24px oklch(0.52 0.24 25 / 0.08)',
+          }}
+            onMouseEnter={e=>{e.currentTarget.style.background='oklch(0.52 0.24 25 / 0.08)'; e.currentTarget.style.boxShadow='0 0 32px oklch(0.52 0.24 25 / 0.2)';}}
+            onMouseLeave={e=>{e.currentTarget.style.background='#f4f4f4'; e.currentTarget.style.boxShadow='0 0 24px oklch(0.52 0.24 25 / 0.08)';}}
+          >→</button>
+          <div style={{ position:'absolute', bottom:20, left:'50%', transform:'translateX(-50%)', display:'flex', gap:8 }}>
+            {renders.map((_,i) => (
+              <div key={i} onClick={()=>setRIdx(i)} style={{
+                width:i===rIdx?24:7, height:3,
+                background:i===rIdx?'var(--cyan)':'#cccccc',
+                cursor:'pointer', transition:'all 0.3s',
+                boxShadow:i===rIdx?'0 0 8px oklch(0.52 0.24 25 / 0.5)':'none',
+              }} />
+            ))}
+          </div>
+        </>)}
+      </div>
+    </div>
+  );
+}
+
+/* ── STRIP CARD ── */
+function Strip({ artwork, isHovered, anyHovered, onClick, onMouseEnter, onMouseLeave }) {
+  // When another strip is hovered, this one compresses. When this one is hovered, it expands.
+  const expanded = isHovered;
+  const compressed = anyHovered && !isHovered;
+  const src = artwork.renders[0] || null;
+
+  return (
+    <div
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      style={{
+        flex: expanded ? '2.8' : compressed ? '0.6' : '1',
+        transition: 'flex 0.5s cubic-bezier(0.22,1,0.36,1)',
+        position: 'relative',
+        overflow: 'hidden',
+        cursor: 'pointer',
+        borderRight: '1px solid #e8e8e8',
+      }}
+    >
+      {src
+        ? <img src={src} alt={artwork.title} style={{
+            position:'absolute', inset:0,
+            width:'100%', height:'100%',
+            objectFit:'cover',
+            objectPosition:'center',
+            filter: isHovered ? 'grayscale(0%) brightness(1.0)' : 'grayscale(100%) brightness(1.0)',
+            transition: 'filter 0.5s ease, transform 0.6s cubic-bezier(0.22,1,0.36,1)',
+            transform: isHovered ? 'scale(1.04)' : 'scale(1)',
+          }} />
+        : <div style={{
+            position:'absolute', inset:0, background:'oklch(0.91 0.01 240)',
+            backgroundImage:`repeating-linear-gradient(45deg,#0d0d18 0,#0d0d18 1px,transparent 1px,transparent 18px),repeating-linear-gradient(-45deg,#0d0d18 0,#0d0d18 1px,transparent 1px,transparent 18px)`,
+            display:'flex', alignItems:'center', justifyContent:'center',
+          }}>
+            <span style={{ fontFamily:'Space Mono,monospace', fontSize:9, letterSpacing:2, color:'#cccccc', textTransform:'uppercase' }}>
+              {artwork.title}
+            </span>
+          </div>
+      }
+
+      {/* Dark gradient at bottom */}
+      <div style={{
+        position:'absolute', inset:0,
+        background:'linear-gradient(to top, oklch(0.97 0.008 60 / 0.9) 0%, transparent 45%)',
+        pointerEvents:'none',
+      }} />
+
+      {/* Title — shown on hover, rotated when compressed */}
+      <div style={{
+        position:'absolute', bottom:0, left:0, right:0,
+        padding:'20px 16px',
+        display:'flex', flexDirection:'column', gap:4,
+        transition:'opacity 0.3s',
+      }}>
+        <div style={{
+          fontFamily:'Space Mono,monospace', fontSize:8,
+          letterSpacing:3, textTransform:'uppercase',
+          color: isHovered ? 'var(--cyan)' : '#666666',
+          opacity: compressed ? 0 : 1,
+          transition: 'opacity 0.3s, color 0.3s',
+        }}>{artwork.category}</div>
+        <div style={{
+          fontFamily:'Orbitron,sans-serif', fontWeight:700,
+          fontSize: compressed ? 9 : 13,
+          letterSpacing: compressed ? 1 : 3,
+          textTransform:'uppercase',
+          color: isHovered ? '#111111' : '#444444',
+          transition:'all 0.4s ease',
+          whiteSpace: compressed ? 'nowrap' : 'normal',
+          writingMode: compressed ? 'vertical-rl' : 'horizontal-tb',
+          transform: compressed ? 'rotate(180deg)' : 'none',
+          marginBottom: compressed ? 8 : 0,
+        }}>{artwork.title}</div>
+        {isHovered && artwork.renders.length > 1 && (
+          <div style={{
+            fontFamily:'Space Mono,monospace', fontSize:8,
+            letterSpacing:2, color:'oklch(0.52 0.24 25 / 0.7)',
+          }}>{artwork.renders.length} renders →</div>
+        )}
+        {isHovered && (
+          <div style={{
+            fontFamily:'Space Mono,monospace', fontSize:9,
+            letterSpacing:2, color:'var(--cyan)',
+            display:'flex', alignItems:'center', gap:6,
+            marginTop:4,
+          }}>VIEW →</div>
+        )}
+      </div>
+
+      {/* Top-left HUD corner */}
+      <div style={{
+        position:'absolute', top:12, left:12, width:12, height:12,
+        borderTop:`1px solid oklch(0.84 0.18 195 / ${isHovered?0.7:0.15})`,
+        borderLeft:`1px solid oklch(0.84 0.18 195 / ${isHovered?0.7:0.15})`,
+        transition:'border-color 0.3s', pointerEvents:'none',
+      }} />
+    </div>
+  );
+}
+
+/* ── PASSWORD GATE ── */
+function PasswordGate({ onUnlock }) {
+  const [value, setValue] = React.useState('');
+  const [error, setError] = React.useState(false);
+  const [shake, setShake] = React.useState(false);
+
+  const PASSWORD = 'jp2026';
+
+  const attempt = () => {
+    if (value === PASSWORD) {
+      sessionStorage.setItem('gallery_unlocked', '1');
+      onUnlock();
+    } else {
+      setError(true);
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
+      setValue('');
+    }
+  };
+
+  return (
+    <div style={{
+      height: '100vh', background: '#ffffff',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontFamily: 'Space Mono, monospace',
+    }}>
+      <div style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24,
+        animation: shake ? 'gateShake 0.5s ease' : 'none',
+      }}>
+        <div style={{ fontFamily: 'Orbitron, sans-serif', fontWeight: 900, fontSize: 11, letterSpacing: 8, color: '#111', textTransform: 'uppercase' }}>
+          JP — Gallery
+        </div>
+        <div style={{ width: 40, height: 1, background: 'oklch(0.52 0.24 25)' }} />
+        <div style={{ fontSize: 9, letterSpacing: 4, color: '#aaa', textTransform: 'uppercase' }}>
+          Enter access code
+        </div>
+        <input
+          type="password"
+          value={value}
+          onChange={e => { setValue(e.target.value); setError(false); }}
+          onKeyDown={e => e.key === 'Enter' && attempt()}
+          autoFocus
+          placeholder="············"
+          style={{
+            width: 240,
+            padding: '14px 20px',
+            fontFamily: 'Space Mono, monospace',
+            fontSize: 14,
+            letterSpacing: 6,
+            textAlign: 'center',
+            background: 'transparent',
+            border: `1px solid ${error ? 'oklch(0.52 0.24 25)' : '#e0e0e0'}`,
+            color: '#111',
+            outline: 'none',
+            transition: 'border-color 0.2s',
+          }}
+        />
+        {error && (
+          <div style={{ fontSize: 9, letterSpacing: 3, color: 'oklch(0.52 0.24 25)', textTransform: 'uppercase' }}>
+            Incorrect code
+          </div>
+        )}
+        <button
+          onClick={attempt}
+          style={{
+            padding: '12px 32px',
+            fontFamily: 'Space Mono, monospace', fontSize: 9,
+            letterSpacing: 4, textTransform: 'uppercase',
+            background: 'oklch(0.52 0.24 25)', color: '#fff',
+            border: 'none', cursor: 'pointer',
+            transition: 'opacity 0.2s',
+          }}
+          onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+          onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+        >Unlock</button>
+      </div>
+      <style>{`
+        @keyframes gateShake {
+          0%,100%{transform:translateX(0)}
+          20%{transform:translateX(-10px)}
+          40%{transform:translateX(10px)}
+          60%{transform:translateX(-8px)}
+          80%{transform:translateX(8px)}
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/* ── APP ── */
+function App() {
+  const [hoveredId, setHoveredId] = useState(null);
+  const [viewing, setViewing] = useState(null);
+
+  return (
+    <>
+      <div style={{ height:'100vh', display:'flex', flexDirection:'column', background:'var(--black)' }}>
+
+        {/* NAV */}
+        <nav style={{
+          height:56, flexShrink:0,
+          background:'oklch(0.97 0.008 60 / 0.95)',
+          borderBottom:'1px solid var(--sep)',
+          display:'flex', alignItems:'center', justifyContent:'space-between',
+          padding:'0 clamp(20px,4vw,52px)',
+          backdropFilter:'blur(12px)', zIndex:10,
+        }}>
+          <a href="Landing Page.html" style={{
+            display:'flex', alignItems:'center', gap:10,
+            textDecoration:'none', color:'var(--dim)',
+            fontFamily:'Space Mono,monospace', fontSize:10,
+            letterSpacing:3, textTransform:'uppercase', transition:'color 0.2s',
+          }}
+            onMouseEnter={e=>e.currentTarget.style.color='var(--cyan)'}
+            onMouseLeave={e=>e.currentTarget.style.color='var(--dim)'}
+          ><span style={{fontSize:16}}>←</span><span>JP</span></a>
+          <div style={{ fontFamily:'Orbitron,sans-serif', fontWeight:900, fontSize:14, letterSpacing:6 }}>GALLERY</div>
+          <div style={{ fontFamily:'Space Mono,monospace', fontSize:9, letterSpacing:2, color:'#cccccc' }}>
+            <span style={{color:'var(--cyan)'}}>{ARTWORKS.length}</span> WORKS
+          </div>
+        </nav>
+
+        {/* STRIP ROW */}
+        <div style={{ flex:1, display:'flex', overflow:'hidden' }}>
+          {ARTWORKS.map(artwork => (
+            <Strip
+              key={artwork.id}
+              artwork={artwork}
+              isHovered={hoveredId === artwork.id}
+              anyHovered={hoveredId !== null}
+              onClick={() => setViewing(artwork)}
+              onMouseEnter={() => setHoveredId(artwork.id)}
+              onMouseLeave={() => setHoveredId(null)}
+            />
+          ))}
+        </div>
+      </div>
+
+      {viewing && <Viewer artwork={viewing} onClose={() => setViewing(null)} />}
+    </>
+  );
+}
+
+function Root() {
+  const [unlocked, setUnlocked] = React.useState(
+    sessionStorage.getItem('gallery_unlocked') === '1'
+  );
+  if (!unlocked) return <PasswordGate onUnlock={() => setUnlocked(true)} />;
+  return <App />;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Root />);
+</script>
+
+<script>
+  (function() {
+    const btnLight = document.getElementById('btn-light');
+    const btnDark  = document.getElementById('btn-dark');
+    const saved = localStorage.getItem('jp_theme') || 'light';
+    if (saved === 'dark') {
+      document.body.classList.add('dark-theme');
+      btnDark.classList.add('active');
+    } else {
+      btnLight.classList.add('active');
+    }
+    btnLight.addEventListener('click', () => {
+      document.body.classList.remove('dark-theme');
+      btnLight.classList.add('active'); btnDark.classList.remove('active');
+      localStorage.setItem('jp_theme', 'light');
+    });
+    btnDark.addEventListener('click', () => {
+      document.body.classList.add('dark-theme');
+      btnDark.classList.add('active'); btnLight.classList.remove('active');
+      localStorage.setItem('jp_theme', 'dark');
+    });
+  })();
+</script>
+</body>
+</html>

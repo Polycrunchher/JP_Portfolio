@@ -1,0 +1,131 @@
+<script>
+(function() {
+  const IMG_SRC = 'uploads/revolver_Main Camera5_003-e90bf461.jpg';
+  const canvas = document.getElementById('glitch-canvas');
+  const ctx = canvas.getContext('2d');
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.src = IMG_SRC;
+
+  let W, H, imgDW, imgDH, imgX, imgY;
+
+  function resize() {
+    W = canvas.offsetWidth; H = canvas.offsetHeight;
+    canvas.width = W; canvas.height = H;
+    const scale = Math.max(W / img.width, H / img.height);
+    imgDW = img.width * scale; imgDH = img.height * scale;
+    imgX = (W - imgDW) / 2; imgY = (H - imgDH) / 2;
+  }
+
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function rndInt(a, b) { return Math.floor(rnd(a, b)); }
+
+  function drawBase() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.drawImage(img, imgX, imgY, imgDW, imgDH);
+  }
+
+  function drawGlitch(intensity) {
+    ctx.clearRect(0, 0, W, H);
+    const slices = rndInt(8, 24);
+    const sliceH = H / slices;
+
+    for (let i = 0; i < slices; i++) {
+      const y = i * sliceH;
+      const h = sliceH + 1;
+      const doShift = Math.random() < 0.4;
+      const shift = doShift ? rnd(-intensity * 55, intensity * 55) : 0;
+
+      // base slice
+      ctx.save();
+      ctx.beginPath(); ctx.rect(0, y, W, h); ctx.clip();
+      ctx.drawImage(img, imgX + shift, imgY, imgDW, imgDH);
+      ctx.restore();
+
+      if (doShift && intensity > 0.3) {
+        const off = rnd(intensity * 6, intensity * 22);
+
+        // Red channel left
+        ctx.save();
+        ctx.beginPath(); ctx.rect(0, y, W, h); ctx.clip();
+        ctx.globalCompositeOperation = 'screen';
+        ctx.globalAlpha = intensity * 0.55;
+        // tint red by drawing a red rect then image with multiply
+        ctx.drawImage(img, imgX + shift - off, imgY, imgDW, imgDH);
+        const rd = ctx.getImageData(0, Math.max(0,y), W, Math.min(h, H - y));
+        for (let p = 0; p < rd.data.length; p += 4) {
+          rd.data[p+1] = 0; rd.data[p+2] = 0; // zero G and B
+        }
+        ctx.putImageData(rd, 0, Math.max(0,y));
+        ctx.restore();
+
+        // Cyan channel right
+        ctx.save();
+        ctx.beginPath(); ctx.rect(0, y, W, h); ctx.clip();
+        ctx.globalCompositeOperation = 'screen';
+        ctx.globalAlpha = intensity * 0.5;
+        ctx.drawImage(img, imgX + shift + off * 0.8, imgY, imgDW, imgDH);
+        const cd = ctx.getImageData(0, Math.max(0,y), W, Math.min(h, H - y));
+        for (let p = 0; p < cd.data.length; p += 4) {
+          cd.data[p] = 0; // zero R
+        }
+        ctx.putImageData(cd, 0, Math.max(0,y));
+        ctx.restore();
+      }
+    }
+
+    // noise bars
+    const bars = rndInt(1, 5);
+    for (let i = 0; i < bars; i++) {
+      const by = rndInt(0, H);
+      const bh = rndInt(2, 10);
+      ctx.save();
+      ctx.globalAlpha = rnd(0.4, 0.85);
+      ctx.fillStyle = Math.random() < 0.5 ? '#00ffee' : '#ff0033';
+      ctx.fillRect(0, by, W, bh);
+      ctx.restore();
+    }
+
+    // scanlines
+    ctx.save();
+    ctx.globalAlpha = 0.1;
+    ctx.fillStyle = '#000';
+    for (let sy = 0; sy < H; sy += 3) { ctx.fillRect(0, sy, W, 1); }
+    ctx.restore();
+  }
+
+  let state = 'idle';
+  let frameCount = 0;
+  let glitchDuration = 0;
+  let glitchFrame = 0;
+  let nextGlitch = rndInt(90, 200);
+
+  function loop() {
+    if (!img.complete || !img.naturalWidth || !W) { requestAnimationFrame(loop); return; }
+    if (state === 'idle') {
+      frameCount++;
+      drawBase();
+      if (frameCount > nextGlitch) {
+        state = 'glitching';
+        glitchDuration = rndInt(10, 26);
+        glitchFrame = 0;
+        nextGlitch = rndInt(60, 220);
+        frameCount = 0;
+      }
+    } else {
+      glitchFrame++;
+      const intensity = Math.sin((glitchFrame / glitchDuration) * Math.PI);
+      drawGlitch(intensity);
+      if (glitchFrame >= glitchDuration) { state = 'idle'; drawBase(); }
+    }
+    requestAnimationFrame(loop);
+  }
+
+  img.onload = function() {
+    resize();
+    window.addEventListener('resize', function() { resize(); drawBase(); });
+    loop();
+  };
+  if (img.complete && img.naturalWidth) img.onload();
+})();
+</script>
