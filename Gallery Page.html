@@ -116,6 +116,7 @@ const ARTWORKS = [
       'uploads/02_Main Camera 2_002.jpg',
       'uploads/02_Main Camera 4_001.jpg',
       'uploads/02_Main Camera 5.jpg',
+      'uploads/Bike Turntable Main Camera 002.mp4',
     ],
   },
 ];
@@ -170,8 +171,12 @@ function Viewer({ artwork, onClose }) {
       </div>
 
       <div style={{ flex:1, position:'relative', display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden' }}>
-        <img key={rIdx} src={renders[rIdx]} alt={artwork.title}
-          style={{ maxWidth:'100%', maxHeight:'100%', objectFit:'contain', animation:'scaleIn 0.3s ease both' }} />
+        {renders[rIdx].endsWith('.mp4')
+          ? <video key={rIdx} src={renders[rIdx]} autoPlay loop muted playsInline
+              style={{ maxWidth:'100%', maxHeight:'100%', objectFit:'contain', animation:'scaleIn 0.3s ease both' }} />
+          : <img key={rIdx} src={renders[rIdx]} alt={artwork.title}
+              style={{ maxWidth:'100%', maxHeight:'100%', objectFit:'contain', animation:'scaleIn 0.3s ease both' }} />
+        }
 
         {renders.length > 1 && (<>
           <button onClick={prev} style={{
