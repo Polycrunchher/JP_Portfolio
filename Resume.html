@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jan Pöppler — Resume</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0c09;
+    --bg2: #181208;
+    --bg3: #221a0f;
+    --nav: #1a0f06;
+    --red: #c0271a;
+    --red2: #e03020;
+    --text: #d8cfc4;
+    --text-dim: #7a6e62;
+    --text-muted: #4a433a;
+    --gold: #a07840;
+    --border: #2a2018;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--nav);
+    border-bottom: 1px solid #2a1a0a;
+    padding: 0 48px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 12.6px;
+    letter-spacing: 0.25em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  .nav-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.3em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  /* LAYOUT */
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 64px 48px 80px;
+  }
+
+  /* HERO */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: end;
+    padding-bottom: 56px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 56px;
+  }
+  .jp-mark {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 138px;
+    font-weight: 900;
+    color: var(--text);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+  }
+  .jp-mark span {
+    color: var(--red);
+  }
+  .hero-role {
+    font-family: 'Space Mono', monospace;
+    font-size: 10.3px;
+    letter-spacing: 0.35em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-top: 16px;
+    margin-bottom: 4px;
+  }
+  .hero-name {
+    font-size: 32.2px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.01em;
+  }
+
+  .hero-right {
+    padding-bottom: 8px;
+  }
+  .hero-bio {
+    font-size: 15.5px;
+    line-height: 1.75;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+    font-weight: 300;
+  }
+  .hero-bio strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .stats {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 24px;
+  }
+  .stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 32.2px;
+    font-weight: 700;
+    color: var(--red);
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9.2px;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .contact-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .contact-item {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+  }
+  .contact-key {
+    font-family: 'Space Mono', monospace;
+    font-size: 10.3px;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    min-width: 52px;
+  }
+  .contact-val {
+    font-size: 14.4px;
+    color: var(--text-dim);
+  }
+  .contact-val a {
+    color: var(--red);
+    text-decoration: none;
+  }
+
+  /* SECTIONS */
+  .section {
+    margin-bottom: 72px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10.3px;
+    letter-spacing: 0.3em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* EXPERIENCE */
+  .exp-item {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 32px;
+    padding: 36px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .exp-item:first-child { border-top: 1px solid var(--border); }
+
+  .exp-meta {
+    padding-top: 2px;
+  }
+  .exp-year {
+    font-family: 'Space Mono', monospace;
+    font-size: 11.5px;
+    color: var(--red);
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+  .exp-company {
+    font-size: 14.9px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .exp-type {
+    font-family: 'Space Mono', monospace;
+    font-size: 9.2px;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .exp-content {}
+  .exp-title {
+    font-size: 19.5px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .exp-desc {
+    font-size: 14.9px;
+    line-height: 1.7;
+    color: var(--text-dim);
+    font-weight: 300;
+    margin-bottom: 12px;
+  }
+  .exp-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10.3px;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    text-transform: uppercase;
+  }
+  .tag.red {
+    color: var(--red);
+    border-color: #3a1810;
+    background: #1a0c08;
+  }
+
+  /* SKILLS GRID */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .skill-block {
+    background: var(--bg);
+    padding: 20px 24px;
+  }
+  .skill-block-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10.3px;
+    letter-spacing: 0.25em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .skill-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .skill-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .skill-name {
+    font-size: 13.8px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .skill-bar-track {
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    position: relative;
+  }
+  .skill-bar-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: var(--red);
+  }
+
+  /* TWO COL */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  /* EDUCATION */
+  .edu-item {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .edu-item:first-child { border-top: 1px solid var(--border); }
+  .edu-year {
+    font-family: 'Space Mono', monospace;
+    font-size: 11.5px;
+    color: var(--red);
+    margin-bottom: 4px;
+  }
+  .edu-title {
+    font-size: 16.1px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .edu-inst {
+    font-size: 13.8px;
+    color: var(--text-dim);
+  }
+
+  /* HIGHLIGHT QUOTE */
+  .highlight-bar {
+    border-left: 3px solid var(--red);
+    padding: 16px 24px;
+    background: var(--bg2);
+    margin: 32px 0;
+  }
+  .highlight-bar p {
+    font-size: 14.9px;
+    line-height: 1.7;
+    color: var(--text-dim);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  /* FOOTER */
+  .resume-footer {
+    border-top: 1px solid var(--border);
+    padding-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-jp {
+    font-family: 'Space Mono', monospace;
+    font-size: 32.2px;
+    font-weight: 700;
+    color: var(--border);
+    letter-spacing: -0.03em;
+  }
+  .footer-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 10.3px;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  @media print {
+    body { background: #fff; color: #111; }
+    nav { display: none; }
+    :root {
+      --bg: #fff; --bg2: #f5f5f5; --bg3: #eee;
+      --text: #111; --text-dim: #444; --text-muted: #888;
+      --border: #ddd; --red: #c0271a; --nav: #fff;
+    }
+    .page { padding: 32px; }
+    .jp-mark { font-size: 92px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">JP</span>
+  <span class="nav-label">Resume · 2026</span>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <div class="jp-mark">J<span>P</span></div>
+      <div class="hero-role">// 3D Artist &amp; Educator</div>
+      <div class="hero-name">Jan Pöppler</div>
+    </div>
+
+    <div class="hero-right">
+      <p class="hero-bio">
+        I'm a <strong>freelance 3D Artist</strong> with 5 years of professional experience in
+        <strong>game production, real-time visualization, and VR</strong>.
+        My most recent work was as a weapon and hard-surface artist on an unannounced game title.
+        Previous clients include <strong>Volkswagen and Audi</strong> for automotive VR applications,
+        and HTK Academy Hamburg where I taught game art.
+        I'm currently looking for a new role as a hard-surface, weapon, or prop artist — or as a lecturer in game art and 3D production.
+      </p>
+
+      <div class="stats">
+        <div>
+          <div class="stat-num">5</div>
+          <div class="stat-label">Years Exp.</div>
+        </div>
+        <div>
+          <div class="stat-num">5</div>
+          <div class="stat-label">Studios</div>
+        </div>
+      </div>
+
+      <div class="contact-row">
+        <div class="contact-item">
+          <span class="contact-key">Email</span>
+          <span class="contact-val"><a href="/cdn-cgi/l/email-protection#2f45015f404a5f5f434a5d6f48404048434a424e4643014c4042"><span class="__cf_email__" data-cfemail="78125608171d0808141d0a381f17171f141d15191114561b1715">[email&#160;protected]</span></a></span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-key">Tel.</span>
+          <span class="contact-val">+49 157 749 95699</span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-key">Location</span>
+          <span class="contact-val">Hamburg, Germany</span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-key">Born</span>
+          <span class="contact-val">22 July 1984, Hamburg</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPERIENCE -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag">// Experience</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <div class="exp-year">2021 — 2025</div>
+        <div class="exp-company">AWE Interactive</div>
+        <div class="exp-type">Freelance</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-title">3D / Weapon Artist</div>
+        <p class="exp-desc">
+          Collaborating since project inception on an <strong style="color:var(--text)">unannounced AAA-grade video game</strong> as a core 3D and weapon artist.
+          Responsible for the full pipeline of weapon assets — from concept blockout through high-poly sculpting,
+          retopology, baking, and PBR texturing in Substance Painter. Ensuring assets meet performance budgets
+          while maintaining visual parity with concept art.
+        </p></div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <div class="exp-year">2021 — 2025</div>
+        <div class="exp-company">HTK Academy</div>
+        <div class="exp-type">Freelance · Educator</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-title">Game Art Lecturer</div>
+        <p class="exp-desc">
+          Teaching 3D design and animation for game production at HTK Academy, Hamburg. Curriculum focused on industry-standard tools, real-time workflows and game-ready asset pipelines.
+        </p></div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <div class="exp-year">2018 — NOW</div>
+        <div class="exp-company">Unevis X-Lab</div>
+        <div class="exp-type">Freelance</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-title">Freelance 3D Artist — Automotive VR</div>
+        <p class="exp-desc">
+          Creating high-fidelity marketing materials, <strong style="color:var(--text)">VR applications</strong>, and real-time configurators
+          for major automotive clients including <strong style="color:var(--text)">Volkswagen and Audi</strong>.
+          Delivering photorealistic vehicle visualizations, interactive product experiences, and
+          optimization for real-time rendering in Unreal Engine.
+        </p></div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <div class="exp-year">2015 — 2016</div>
+        <div class="exp-company">Mooneye Studios</div>
+        <div class="exp-type">Full-Time</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-title">Environment Artist — Lost Ember</div>
+        <p class="exp-desc">
+          Environment artist on <strong style="color:var(--text)">Lost Ember</strong>, a narrative adventure game by Mooneye Studios. Responsible for 3D environment creation across PC and console.
+        </p></div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <div class="exp-year">2014 — 2015</div>
+        <div class="exp-company">Goodgames</div>
+        <div class="exp-type">Full-Time</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-title">3D Artist</div>
+        <p class="exp-desc">
+          Joined one of Germany's leading mobile and browser game studios. Created 3D assets for
+          live game productions across multiple titles — including modeling, texturing, and rigging
+          for characters and props. Collaborated closely with art directors to maintain visual consistency
+          and quality across high-volume production pipelines.
+        </p></div>
+    </div>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag">// Skills &amp; Software</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="skills-grid">
+      <div class="skill-block">
+        <div class="skill-block-title">3D Software</div>
+        <div class="skill-list">
+          <div class="skill-row"><span class="skill-name">Blender</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:95%"></div></div></div>
+          <div class="skill-row"><span class="skill-name">Plasticity</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div></div>
+          <div class="skill-row"><span class="skill-name">ZBrush</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:50%"></div></div></div>
+          <div class="skill-row"><span class="skill-name">Rizom UV</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div></div>
+          <div class="skill-row"><span class="skill-name">Maya</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:20%"></div></div></div>
+          <div class="skill-row"><span class="skill-name">3ds Max</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:20%"></div></div></div>
+        </div>
+      </div>
+      <div class="skill-block">
+        <div class="skill-block-title">Texturing / Rendering</div>
+        <div class="skill-list">
+          <div class="skill-row"><span class="skill-name">Substance Painter</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:95%"></div></div></div>
+          <div class="skill-row"><span class="skill-name">Marmoset Toolbag</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div></div>
+        </div>
+      </div>
+      <div class="skill-block">
+        <div class="skill-block-title">Real-Time / Engines</div>
+        <div class="skill-list">
+          <div class="skill-row"><span class="skill-name">Unreal Engine 5</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- LANGUAGES -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag">// Languages</span>
+      <div class="section-line"></div>
+    </div>
+    <div style="display:flex; gap:48px;">
+      <div class="edu-item">
+        <div class="edu-year">Native</div>
+        <div class="edu-title">German</div>
+        <div class="edu-inst">Mother tongue</div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-year">Professional</div>
+        <div class="edu-title">English</div>
+        <div class="edu-inst">Business fluent</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="resume-footer">
+    <div class="footer-jp">JP</div>
+    <div class="footer-date">Jan Pöppler · Hamburg · April 2026</div>
+  </div>
+
+</div>
+
+</body>
+</html>
