@@ -22,6 +22,7 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; background-color: #ffffff !important; color: var(--text); overflow: hidden; }
 
+
   /* load animations */
   @keyframes fadeUp   { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
   @keyframes fadeIn   { from { opacity:0; } to { opacity:1; } }
@@ -115,8 +116,8 @@
   .content-col {
     flex: 1;
     overflow-y: auto;
-    padding: clamp(32px, 5vh, 64px) clamp(32px, 5vw, 72px) clamp(32px, 5vh, 64px) clamp(24px, 3vw, 48px);
-    display: flex; flex-direction: column; justify-content: center;
+    padding: clamp(24px, 3vh, 40px) clamp(32px, 5vw, 72px) clamp(24px, 3vh, 40px) clamp(24px, 3vw, 48px);
+    display: flex; flex-direction: column; justify-content: flex-start;
     scrollbar-width: none;
   }
   .content-col::-webkit-scrollbar { display: none; }
@@ -223,7 +224,7 @@
 
   /* ── THEME SWITCHER ── */
   .theme-switcher {
-    position: fixed; top: 16px; right: 160px; z-index: 200;
+    position: fixed; top: 16px; right: 20px; z-index: 200;
     display: flex; gap: 4px;
   }
   .theme-btn {
