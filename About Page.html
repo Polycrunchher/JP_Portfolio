@@ -224,7 +224,6 @@
 
   /* ── THEME SWITCHER ── */
   .theme-switcher {
-    position: fixed; top: 16px; right: 20px; z-index: 200;
     display: flex; gap: 4px;
   }
   .theme-btn {
@@ -256,10 +255,7 @@
 </head>
 <body>
 
-<div class="theme-switcher">
-  <button class="theme-btn light-btn" id="btn-light" title="Light mode">☀</button>
-  <button class="theme-btn dark-btn" id="btn-dark" title="Dark mode">☾</button>
-</div>
+
 <div class="stage">
 
   <!-- NAV -->
@@ -269,9 +265,9 @@
       <span>JP</span>
     </a>
     <div class="nav-title">ABOUT</div>
-    <div class="nav-status">
-      <div class="status-dot"></div>
-      <span>Available</span>
+    <div class="theme-switcher">
+      <button class="theme-btn light-btn" id="btn-light" title="Light mode">☀</button>
+      <button class="theme-btn dark-btn" id="btn-dark" title="Dark mode">☾</button>
     </div>
   </nav>
 
@@ -289,7 +285,13 @@
     <!-- CONTENT -->
     <div class="content-col">
 
-      <div class="name">JP</div>
+      <div style="display:flex; align-items:center; gap:16px; align-items:flex-end;">
+        <div class="name">JP</div>
+        <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:oklch(0.52 0.24 25);box-shadow:0 0 6px oklch(0.52 0.24 25 / 0.6);"></div>
+          <span style="font-family:Space Mono,monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--dim);">Available</span>
+        </div>
+      </div>
       <div class="rule"></div>
       <div class="role">Hardsurface Artist</div>
 
