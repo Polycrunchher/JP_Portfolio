@@ -342,6 +342,7 @@
       </div>
 
       <!-- Availability -->
+      <div class="skills-heading" style="margin-bottom: 12px;">// Available For</div>
       <div class="avail">
         <div class="avail-tag">
           <div class="avail-dot"></div>
@@ -361,12 +362,12 @@
           </svg>
           <span>LinkedIn</span>
         </a>
-        <a href="mailto:j.poeppler@googlemail.com" class="contact-link">
+        <button onclick="document.getElementById('contact-modal').style.display='flex'" class="contact-link" style="cursor:pointer;">
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
           </svg>
           <span>Message Me</span>
-        </a>
+        </button>
 
       </div>
 
@@ -396,6 +397,63 @@
       localStorage.setItem('jp_theme', 'dark');
     });
   })();
+</script>
+
+<!-- CONTACT MODAL -->
+<div id="contact-modal" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; backdrop-filter:blur(4px);">
+  <div style="background:#fff; border:1px solid #e0e0e0; padding:40px; width:90%; max-width:480px; position:relative; animation:fadeUp 0.3s ease;">
+    <button onclick="document.getElementById('contact-modal').style.display='none'" style="position:absolute;top:16px;right:16px;background:none;border:none;cursor:pointer;font-size:18px;color:#666;">✕</button>
+    <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:18px;letter-spacing:4px;margin-bottom:8px;color:#111;">GET IN TOUCH</div>
+    <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#aaa;margin-bottom:32px;">// Send me a message</div>
+    
+    <form id="contact-form" action="https://formspree.io/f/mnjwqapa" method="POST">
+      <div style="margin-bottom:20px;">
+        <label style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#aaa;display:block;margin-bottom:8px;">Name</label>
+        <input type="text" name="name" required style="width:100%;padding:10px 14px;border:1px solid #e0e0e0;background:#fff;font-family:'Space Mono',monospace;font-size:12px;color:#111;outline:none;transition:border 0.2s;" onfocus="this.style.borderColor='oklch(0.52 0.24 25)'" onblur="this.style.borderColor='#e0e0e0'" />
+      </div>
+      <div style="margin-bottom:20px;">
+        <label style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#aaa;display:block;margin-bottom:8px;">Email</label>
+        <input type="email" name="email" required style="width:100%;padding:10px 14px;border:1px solid #e0e0e0;background:#fff;font-family:'Space Mono',monospace;font-size:12px;color:#111;outline:none;transition:border 0.2s;" onfocus="this.style.borderColor='oklch(0.52 0.24 25)'" onblur="this.style.borderColor='#e0e0e0'" />
+      </div>
+      <div style="margin-bottom:28px;">
+        <label style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#aaa;display:block;margin-bottom:8px;">Message</label>
+        <textarea name="message" required rows="5" style="width:100%;padding:10px 14px;border:1px solid #e0e0e0;background:#fff;font-family:'Space Mono',monospace;font-size:12px;color:#111;outline:none;resize:vertical;transition:border 0.2s;" onfocus="this.style.borderColor='oklch(0.52 0.24 25)'" onblur="this.style.borderColor='#e0e0e0'"></textarea>
+      </div>
+      <button type="submit" style="width:100%;padding:14px;border:1px solid oklch(0.52 0.24 25);background:transparent;color:oklch(0.52 0.24 25);font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='oklch(0.52 0.24 25 / 0.1)'" onmouseout="this.style.background='transparent'">Send Message →</button>
+    </form>
+    <div id="form-success" style="display:none;text-align:center;padding:20px 0;">
+      <div style="font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:3px;color:oklch(0.52 0.24 25);margin-bottom:8px;">MESSAGE SENT</div>
+      <div style="font-family:'Space Mono',monospace;font-size:11px;color:#aaa;">Thanks! I'll get back to you soon.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('contact-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+    const response = await fetch(form.action, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+    if (response.ok) {
+      form.style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('contact-modal').style.display = 'none';
+        form.style.display = 'block';
+        document.getElementById('form-success').style.display = 'none';
+        form.reset();
+      }, 3000);
+    }
+  });
+
+  // Close modal on backdrop click
+  document.getElementById('contact-modal').addEventListener('click', function(e) {
+    if (e.target === this) this.style.display = 'none';
+  });
 </script>
 </body>
 </html>
