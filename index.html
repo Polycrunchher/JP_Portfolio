@@ -258,8 +258,8 @@
 <body>
 
 <div class="theme-switcher">
-  <button class="theme-btn" id="btn-light" title="Light">☀</button>
-  <button class="theme-btn active" id="btn-dark" title="Dark">☾</button>
+  <button class="theme-btn active" id="btn-light" title="Light">☀</button>
+  <button class="theme-btn" id="btn-dark" title="Dark">☾</button>
 </div>
 
 <div class="stage">
@@ -323,8 +323,8 @@
 <script>
   const btnLight = document.getElementById('btn-light');
   const btnDark  = document.getElementById('btn-dark');
-  const saved = localStorage.getItem('jp_theme') || 'dark';
-  if (saved === 'light') {
+  const saved = localStorage.getItem('jp_theme') || 'light';
+  if (saved !== 'dark') {
     document.body.classList.add('light');
     btnLight.classList.add('active'); btnDark.classList.remove('active');
   }
