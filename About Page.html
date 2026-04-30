@@ -40,7 +40,7 @@
     height: 56px; flex-shrink: 0;
     background: oklch(0.97 0.008 60 / 0.95);
     border-bottom: 1px solid var(--sep);
-    display: flex; align-items: center; justify-content: space-between;
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
     padding: 0 clamp(20px, 4vw, 52px);
     backdrop-filter: blur(12px);
     z-index: 10;
@@ -55,7 +55,7 @@
   .nav-back:hover { color: var(--cyan); }
   .nav-title {
     font-family: 'Orbitron', sans-serif; font-weight: 900;
-    font-size: 16.8px; letter-spacing: 6px; color: var(--text);
+    font-size: 16.8px; letter-spacing: 6px; color: var(--text); text-align: center;
   }
   .nav-status {
     display: flex; align-items: center; gap: 8px;
@@ -256,6 +256,10 @@
 <body>
 
 
+<div class="theme-switcher" style="position:fixed;top:16px;right:80px;z-index:200;display:flex;gap:4px;">
+  <button class="theme-btn light-btn" id="btn-light" title="Light mode">☀</button>
+  <button class="theme-btn dark-btn" id="btn-dark" title="Dark mode">☾</button>
+</div>
 <div class="stage">
 
   <!-- NAV -->
@@ -265,10 +269,7 @@
       <span>JP</span>
     </a>
     <div class="nav-title">ABOUT</div>
-    <div class="theme-switcher">
-      <button class="theme-btn light-btn" id="btn-light" title="Light mode">☀</button>
-      <button class="theme-btn dark-btn" id="btn-dark" title="Dark mode">☾</button>
-    </div>
+
   </nav>
 
   <!-- MAIN -->
@@ -397,4 +398,4 @@
   })();
 </script>
 </body>
-</html> 
+</html>
