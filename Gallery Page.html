@@ -59,19 +59,22 @@
 <script type="text/babel">
 const { useState, useEffect, useCallback } = React;
 
+const AWE_LOGO_LIGHT = 'uploads/AWE-logo-light.webp';
+const AWE_LOGO_DARK  = 'uploads/AWE-logo-dark.webp';
+const AWE_CREDIT = { studio: 'AWE INTERACTIVE', label: 'Art created during employment at' };
+
 const ARTWORKS = [
-  { id: 2, title: 'Revolver', category: 'Weapons', renders: [
-    'uploads/revolver_Main Camera5_008.jpg',
+  { id: 2, title: 'Revolver', category: 'Weapons', credit: AWE_CREDIT, renders: [
     'uploads/Revolver_Main Camera.jpg',
     'uploads/revolver_Main Camera4.jpg',
     'uploads/revolver_Main Camera5_003.jpg',
     'uploads/revolver_Main Camera5_004.jpg',
     'uploads/revolver_Main Camera5_005.jpg',
     'uploads/revolver_Main Camera5_007.jpg',
-   
+    'uploads/revolver_Main Camera5_008.jpg',
   ]},
   {
-    id: 7, title: 'Drillgun', category: 'Weapons',
+    id: 7, title: 'Drillgun', category: 'Weapons', credit: AWE_CREDIT,
     renders: [
       'uploads/Drillgun_FullQuality.jpg',
       'uploads/Drillgun_Shot 2_FullQuality.jpg',
@@ -81,7 +84,7 @@ const ARTWORKS = [
     ],
   },
   {
-    id: 8, title: 'Inspector Pistol', category: 'Weapons',
+    id: 8, title: 'Inspector Pistol', category: 'Weapons', credit: AWE_CREDIT,
     renders: [
       'uploads/Inspector_pistol_shot 2_FullQuality.jpg',
       'uploads/Inspector_pistol_Camera 1_FullQuality_002.jpg',
@@ -93,7 +96,7 @@ const ARTWORKS = [
     ],
   },
   {
-    id: 4, title: 'MXT 2500 Radio', category: 'Props',
+    id: 4, title: 'MXT 2500 Radio', category: 'Props', credit: AWE_CREDIT,
     renders: [
       'uploads/Radio_Shot 2_004.jpg',
       'uploads/Radio_Main Camera_003.jpg',
@@ -103,7 +106,7 @@ const ARTWORKS = [
     ],
   },
   {
-    id: 5, title: 'Field Radio MK-II', category: 'Props',
+    id: 5, title: 'Field Radio MK-II', category: 'Props', credit: AWE_CREDIT,
     renders: [
       'uploads/Radio2_Shot 3_001.jpg',
       'uploads/Radio2_Shot 4.jpg',
@@ -182,6 +185,31 @@ function Viewer({ artwork, onClose }) {
           : <img key={rIdx} src={renders[rIdx]} alt={artwork.title}
               style={{ maxWidth:'100%', maxHeight:'100%', objectFit:'contain', animation:'scaleIn 0.3s ease both' }} />
         }
+
+        {artwork.credit && (
+          <div style={{
+            position:'absolute', bottom:0, left:0, right:0,
+            padding:'20px 24px 16px',
+            background:'linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0) 100%)',
+            display:'flex', alignItems:'center', gap:14,
+            pointerEvents:'none',
+          }}>
+            <img
+              src={document.body.classList.contains('dark-theme') ? AWE_LOGO_DARK : AWE_LOGO_LIGHT}
+              alt="AWE Interactive"
+              style={{ height:32, width:'auto', objectFit:'contain', flexShrink:0 }}
+            />
+            <div style={{ width:1, height:24, background:'rgba(255,255,255,0.2)', flexShrink:0 }} />
+            <div>
+              <div style={{ fontFamily:'Space Mono,monospace', fontSize:8, letterSpacing:2, textTransform:'uppercase', color:'rgba(255,255,255,0.5)', marginBottom:3 }}>
+                {artwork.credit.label}
+              </div>
+              <div style={{ fontFamily:'Orbitron,sans-serif', fontWeight:700, fontSize:9, letterSpacing:3, color:'rgba(255,255,255,0.9)' }}>
+                {artwork.credit.studio}
+              </div>
+            </div>
+          </div>
+        )}
 
         {renders.length > 1 && (<>
           <button onClick={prev} style={{
